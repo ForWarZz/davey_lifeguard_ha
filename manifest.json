@@ -1,0 +1,15 @@
+{
+  "domain": "davey_lifeguard",
+  "name": "Davey Lifeguard",
+  "version": "1.0",
+  "documentation": "",
+  "dependencies": [],
+  "codeowners": [
+    "@forwarzz"
+  ],
+  "requirements": [
+
+  ],
+  "iot_class": "cloud_polling",
+  "config_flow": true
+}
