@@ -24,7 +24,7 @@ class DaveyCoordinator(DataUpdateCoordinator):
             async with async_timeout.timeout(10):
                 return await self.davey_device.get_device_data()
         except TokenException as err:
-            _LOGGER.error(f'Token error: {err}')
+            _LOGGER.error(f'Token error: {err}', exc_info=True)
             await self.__handle_token_error()
         except Exception as e:
             raise UpdateFailed(f'Failed to update data: {e}')
