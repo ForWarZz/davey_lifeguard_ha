@@ -13,8 +13,10 @@ class DaveyDevice:
         self.device_sn = None
 
         self.user_id = user_id
-        self.token = token
-        self.refresh_token = refresh_token
+        self.auth = {
+            'token': token,
+            'refresh_token': refresh_token
+        }
 
     async def setup_device_sn(self):
         data = await self.__make_request("GET", f'{BASE_URL}/device/me')
@@ -28,12 +30,12 @@ class DaveyDevice:
 
         return data
 
-    async def refresh_token(self):
+    async def __refresh_token(self):
         _LOGGER.debug('Refresh token...')
 
         async with ClientSession() as session:
             body = {
-                'refreshToken': self.refresh_token,
+                'refreshToken': self.auth['refresh_token'],
                 'userId': self.user_id
             }
 
@@ -41,8 +43,8 @@ class DaveyDevice:
                 response.raise_for_status()
                 data = await response.json()
 
-                self.token = data['token']
-                self.refresh_token = data['refreshToken']
+                self.auth['token'] = data['token']
+                self.auth['refresh_token'] = data['refreshToken']
 
                 _LOGGER.debug('Token refreshed')
 
@@ -54,14 +56,14 @@ class DaveyDevice:
 
         async with ClientSession() as session:
             headers = {
-                'Authorization': self.token
+                'Authorization': self.auth['token'],
             }
 
             async with session.request(method, url, headers=headers, json=body) as response:
                 if response.status == 401:
                     _LOGGER.debug('Need to refresh token')
 
-                    await self.refresh_token()
+                    await self.__refresh_token()
                     return await self.__make_request(method, url, body, attempts=attempts + 1)
                 elif response.status == 200:
                     _LOGGER.debug('Request good')
