@@ -10,7 +10,7 @@ PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
     # Platform.SWITCH,
-    # Platform.SELECT
+    Platform.SELECT
 ]
 
 # Auth
@@ -18,8 +18,7 @@ CONF_TOKEN = 'lifeguard_account_token'
 CONF_REFRESH_TOKEN = 'lifeguard_refresh_token'
 CONF_USER_ID = 'lifeguard_user_id'
 
-
-DAVEY_STATUS_SENSOR_KEY = 'is_connected'
+DAVEY_STATUS_SENSOR_KEY = 'isConnected'
 
 # Sensors
 PH_SENSOR_KEY = 'ph'
@@ -32,7 +31,9 @@ VSD_PUMP_SPEED_KEY = 'vsdPumpSpeed'
 TEMP_TARGET_KEY = 'tempTarget'
 PH_TARGET_KEY = 'phTarget'
 ORP_TARGET_KEY = 'orpTarget'
-SALT_TARGET_KEY = 'salrtTarget'
+SALT_TARGET_KEY = 'saltTarget'
+
+VSD_TARGET_SPEED_KEY = 'vsdPumpSpeed'
 
 # Binary status sensors
 PH_BIN_STATUS_KEY = 'phConnected'
@@ -43,7 +44,7 @@ ORP_BIN_STATUS_KEY = 'orpConnected'
 # Error status sensors
 FLOW_ERROR_KEY = 'flowError'
 PH_ERROR_KEY = 'phError'
-SALT_ERROR_KEY = 'salinityError'
+SALT_ERROR_KEY = 'saltError'
 ORP_ERROR_KEY = 'orpError'
 
 VSD_BIN_STATUS_KEY = 'isVsdPumpConnected'

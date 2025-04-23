@@ -19,7 +19,7 @@ from .utils import get_device_info
 from .const import (
     DOMAIN,
     PH_SENSOR_KEY, TEMP_SENSOR_KEY, SALT_SENSOR_KEY, ORP_SENSOR_KEY,
-    VSD_PUMP_SPEED_KEY
+    VSD_PUMP_SPEED_KEY, PH_TARGET_KEY, SALT_TARGET_KEY, ORP_TARGET_KEY
 )
 from .coordinator import DaveyCoordinator
 
@@ -34,21 +34,25 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
     # Sensors
     sensors = [
-        DaveySensor(coordinator, PH_SENSOR_KEY, "Niveau pH"),
-        DaveySensor(coordinator, ORP_SENSOR_KEY, "Niveau ORP"),
+        DaveySensor(coordinator, PH_SENSOR_KEY, "Niveau pH", "mdi:flask-outline"),
+        DaveySensor(coordinator, ORP_SENSOR_KEY, "Niveau ORP", "mdi:current-dc"),
         DaveySensor(coordinator, SALT_SENSOR_KEY, "Niveau sel"),
-        DaveySensor(coordinator, TEMP_SENSOR_KEY, "Température eau"),
-        DaveySensor(coordinator, VSD_PUMP_SPEED_KEY, "Vitesse VSD"),
+        DaveySensor(coordinator, TEMP_SENSOR_KEY, "Température eau", "mdi:thermometer-water"),
+        DaveySensor(coordinator, VSD_PUMP_SPEED_KEY, "Vitesse VSD", "mdi:fan"),
+
+        DaveySensor(coordinator, PH_TARGET_KEY, "Consigne pH", "mdi:flask-outline"),
+        DaveySensor(coordinator, ORP_TARGET_KEY, "Consigne ORP", "mdi:current-dc"),
     ]
 
     async_add_entities(sensors)
 
 
 class DaveySensor(SensorEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, name):
+    def __init__(self, coordinator, key, name, icon=None):
         super().__init__(coordinator)
         self._attr_name = name
         self.key = key
+        self._attr_icon = icon
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
@@ -66,17 +70,17 @@ class DaveySensor(SensorEntity, CoordinatorEntity):
     def native_unit_of_measurement(self):
         if self.key == TEMP_SENSOR_KEY:
             return UnitOfTemperature.CELSIUS
-        elif self.key == ORP_SENSOR_KEY:
+        elif "orp" in self.key:
             return UnitOfElectricPotential.MILLIVOLT
-        elif self.key == SALT_SENSOR_KEY:
+        elif "salt" in self.key:
             return CONCENTRATION_PARTS_PER_MILLION
-        elif self.key == PH_SENSOR_KEY:
+        elif "ph" in self.key:
             return "pH"
         return None
 
     @property
     def unique_id(self):
-        return f"{DOMAIN}_{self.key}"
+        return f"{DOMAIN}_sensor_{self.key}"
 
     @property
     def state_class(self):
