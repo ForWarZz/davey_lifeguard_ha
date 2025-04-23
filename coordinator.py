@@ -4,8 +4,9 @@ from datetime import timedelta
 
 import async_timeout
 from homeassistant.const import CONF_SCAN_INTERVAL
+from homeassistant.exceptions import ConfigEntryAuthFailed
 
-from .davey.token_error import TokenException
+from .davey.davey_exception import TokenException, DaveyAuthException, DaveyRequestException, DaveyAPIException
 from .const import DOMAIN
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -39,11 +40,15 @@ class DaveyCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug(f"Device data: {full_data}")
 
                 return full_data
-        except TokenException as err:
-            _LOGGER.error(f'Token error: {err}', exc_info=True)
-            await self.__handle_token_error()
-        except Exception as e:
-            raise UpdateFailed(f'Failed to update data: {e}')
+        except DaveyAuthException as auth_err:
+            _LOGGER.error(f'Authentication failed: {auth_err}')
+            raise ConfigEntryAuthFailed from auth_err
+
+        except DaveyRequestException as req_err:
+            raise UpdateFailed(f'Request error: {req_err}') from req_err
+
+        except DaveyAPIException as api_err:
+            raise UpdateFailed(f'Unhandled API error: {api_err}') from api_err
 
     async def __handle_token_error(self):
         self.update_interval = None

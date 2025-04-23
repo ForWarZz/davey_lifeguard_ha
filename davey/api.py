@@ -1,6 +1,8 @@
 import asyncio
 import logging
 from aiohttp import ClientSession
+
+from .davey_exception import DaveyRequestException, DaveyAPIException
 from ..const import (
     BASE_URL, PH_TARGET_KEY, ORP_TARGET_KEY, TEMP_TARGET_KEY,
     VSD_BIN_STATUS_KEY, VSD_PUMP_SPEED_KEY,
@@ -40,22 +42,32 @@ class DaveyAPI:
 
     async def __authenticated_call(self, method, url, body=None):
         _LOGGER.debug(f'Calling {url} [{method}]')
+        _LOGGER.debug(f"Request body : {body}")
 
-        async with ClientSession() as session:
-            headers = {'Authorization': self.token}
+        try:
+            async with ClientSession() as session:
+                headers = {'Authorization': self.token}
 
-            async with session.request(method, url, headers=headers, json=body) as response:
-                if response.status == 401:
-                    _LOGGER.debug('Token expired, refreshing...')
-                    await self.__refresh_token()
+                async with session.request(method, url, headers=headers, json=body) as response:
+                    if response.status == 401:
+                        _LOGGER.warning('Token expired or invalid, refreshing...')
+                        await self.__refresh_token()
+                        return await self.__authenticated_call(method, url, body)
 
-                    return await self.__authenticated_call(method, url, body)
+                    if response.status >= 500:
+                        raise DaveyRequestException(f"Server error {response.status} for {url}")
 
-                response.raise_for_status()
-                if response.status == 200:
-                    return await response.json()
+                    response.raise_for_status()
 
-                return None
+                    if response.status == 200:
+                        return await response.json()
+                    return None
+        except asyncio.TimeoutError as e:
+            _LOGGER.error(f'Timeout during request to {url}: {e}')
+            raise DaveyRequestException("Request timed out") from e
+        except Exception as e:
+            _LOGGER.error(f'Unexpected error during request to {url}: {e}', exc_info=True)
+            raise DaveyAPIException(f"Unexpected error: {e}") from e
 
     async def fetch_account_data(self):
         _LOGGER.debug('Fetching account data...')
