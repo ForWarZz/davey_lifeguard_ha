@@ -1,0 +1,57 @@
+{
+  "title": "Davey Lifeguard",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Davey",
+        "description": "Enter your credentials to connect your Davey Lifeguard device.",
+        "data": {
+          "email": "Email address",
+          "password": "Password",
+          "scan_interval": "Update interval (in seconds)"
+        }
+      }
+    },
+    "error": {
+      "invalid_credentials": "Invalid credentials."
+    },
+    "abort": {
+      "already_configured": "This Davey account is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "ph": { "name": "pH Level" },
+      "orp": { "name": "ORP Level" },
+      "salinity": { "name": "Salt Level" },
+      "temp": { "name": "Water Temperature" },
+      "vsd_pump_speed": { "name": "VSD Speed" },
+      "ph_target": { "name": "pH Target" },
+      "orp_target": { "name": "ORP Target" },
+      "cell_output": { "name": "Chlorine Production" }
+    },
+    "switch": {
+      "manual": { "name": "Manual Mode" },
+      "boost": { "name": "Boost Mode" }
+    },
+    "binary_sensor": {
+      "ph_connected": { "name": "pH Probe" },
+      "orp_connected": { "name": "ORP Probe" },
+      "temp_connected": { "name": "Temperature Probe" },
+      "salinity_connected": { "name": "Salt Probe" },
+      "vsd_connected": { "name": "VSD Pump" },
+
+      "ph_error": { "name": "pH Error" },
+      "orp_error": { "name": "ORP Error" },
+      "salt_error": { "name": "Salt Error" },
+      "flow_error": { "name": "Flow Error" },
+
+      "is_connected": { "name": "Device Connected" }
+    },
+    "select": {
+      "ph_target": { "name": "pH Target" },
+      "orp_target": { "name": "ORP Target" },
+      "vsd_pump_speed": { "name": "VSD Speed" }
+    }
+  }
+}
