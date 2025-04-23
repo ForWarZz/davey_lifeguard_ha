@@ -1,16 +1,22 @@
+import logging
+
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .utils import get_device_info
 from .const import DOMAIN, MANUAL_OPTION_KEY, BOOT_OPTION_KEY
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     modes = [
-        DaveyModeSwitch(coordinator, MANUAL_OPTION_KEY, "Mode Manuel", "mdi:hand"),
+        DaveyModeSwitch(coordinator, MANUAL_OPTION_KEY, "Mode Manuel", "mdi:hand-back-left"),
         DaveyModeSwitch(coordinator, BOOT_OPTION_KEY, "Mode Boost", "mdi:flash")
     ]
 
@@ -43,3 +49,15 @@ class DaveyModeSwitch(SwitchEntity, CoordinatorEntity):
 
         await self.coordinator.davey_api.change_modes(current_modes)
         await self.coordinator.async_request_refresh()
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        return get_device_info(
+            self.coordinator.data["serialNumber"],
+            self.coordinator.data["firmwareVersion"],
+            self.coordinator.data["nipperVersion"],
+        )
+
+    @property
+    def unique_id(self):
+        return f"{DOMAIN}_switch_{self.key}"

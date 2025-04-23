@@ -26,7 +26,7 @@ class DaveyCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug("Fetching device data")
                 account_data, status_data = await asyncio.gather(
                     self.davey_api.fetch_account_data(),
-                    self.davey_api.fetch_device_data()
+                    self.davey_api.fetch_status_data()
                 )
 
                 full_data = account_data | status_data

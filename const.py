@@ -4,6 +4,8 @@ DOMAIN = 'davey_lifeguard'
 DEFAULT_NAME = 'Davey Lifeguard'
 BASE_URL = 'https://lg.dwprod.co'
 
+TIMESTAMP_INTERVAL = 10  # seconds
+
 DEFAULT_SCAN_INTERVAL = 600  # seconds
 
 PLATFORMS: list[Platform] = [

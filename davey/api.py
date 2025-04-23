@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from aiohttp import ClientSession
 from ..const import (
@@ -17,7 +18,7 @@ class DaveyAPI:
         self.device_sn = None
 
         self._account_data = None
-        self._device_data = None
+        self._status_data = None
 
     async def __refresh_token(self):
         _LOGGER.debug('Refreshing token...')
@@ -66,21 +67,23 @@ class DaveyAPI:
 
         return self._account_data
 
-    async def fetch_device_data(self):
+    async def fetch_status_data(self):
         _LOGGER.debug('Fetching device status data...')
 
-        self._device_data = await self.__authenticated_call("GET", f'{BASE_URL}/device/status/{self.device_sn}')
+        self._status_data = await self.__authenticated_call("GET", f'{BASE_URL}/device/status/{self.device_sn}')
 
-        return self._device_data
+        return self._status_data
 
     async def change_target(self, target_key, target_value):
         _LOGGER.debug(f'Changing target {target_key} to {target_value}...')
 
-        if self._account_data is not None and self._device_data is not None:
+        if self._account_data is not None and self._status_data is not None:
             _LOGGER.debug('Using cached account and device data')
 
-        account_data = self._account_data or await self.fetch_account_data()
-        device_data = self._device_data or await self.fetch_device_data()
+        account_data, status_data = await asyncio.gather(
+            self.fetch_account_data() if self._account_data is None else asyncio.sleep(0, self._account_data),
+            self.fetch_status_data() if self._status_data is None else asyncio.sleep(0, self._status_data)
+        )
 
         body = {
             'serialNumber': self.device_sn,
@@ -93,10 +96,10 @@ class DaveyAPI:
                 'isVsdPumpConnected': account_data.get(VSD_BIN_STATUS_KEY),
                 'vsdPumpSpeed': account_data.get(VSD_PUMP_SPEED_KEY),
 
-                'phConnected': device_data.get(PH_BIN_STATUS_KEY),
-                'salinityConnected': device_data.get(SALT_BIN_STATUS_KEY),
-                'orpConnected': device_data.get(ORP_BIN_STATUS_KEY),
-                'tempConnected': device_data.get(TEMP_BIN_STATUS_KEY),
+                'phConnected': status_data.get(PH_BIN_STATUS_KEY),
+                'salinityConnected': status_data.get(SALT_BIN_STATUS_KEY),
+                'orpConnected': status_data.get(ORP_BIN_STATUS_KEY),
+                'tempConnected': status_data.get(TEMP_BIN_STATUS_KEY),
 
                 'cellOutput': account_data.get('cellOutput'),
                 'backwashDuration': account_data.get('backwashDuration'),
