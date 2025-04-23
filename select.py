@@ -11,10 +11,7 @@ from .const import DOMAIN, VSD_PUMP_SPEED_KEY, PH_TARGET_KEY, ORP_TARGET_KEY
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    davey = hass.data[DOMAIN][config_entry.entry_id]
-    coordinator = DaveyCoordinator(hass, davey, config_entry)
-
-    await coordinator.async_config_entry_first_refresh()
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     selects = [
         DaveySelect(

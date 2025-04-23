@@ -9,7 +9,7 @@ DEFAULT_SCAN_INTERVAL = 600  # seconds
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
-    # Platform.SWITCH,
+    Platform.SWITCH,
     Platform.SELECT
 ]
 
@@ -27,11 +27,12 @@ SALT_SENSOR_KEY = 'salinity'
 ORP_SENSOR_KEY = 'orp'
 VSD_PUMP_SPEED_KEY = 'vsdPumpSpeed'
 
+CELL_OUTPUT_KEY = 'cellOutput'
+
 # Targets
 TEMP_TARGET_KEY = 'tempTarget'
 PH_TARGET_KEY = 'phTarget'
 ORP_TARGET_KEY = 'orpTarget'
-SALT_TARGET_KEY = 'saltTarget'
 
 VSD_TARGET_SPEED_KEY = 'vsdPumpSpeed'
 
@@ -48,3 +49,6 @@ SALT_ERROR_KEY = 'saltError'
 ORP_ERROR_KEY = 'orpError'
 
 VSD_BIN_STATUS_KEY = 'isVsdPumpConnected'
+
+MANUAL_OPTION_KEY = 'MANUAL'
+BOOT_OPTION_KEY = 'BOOT'

@@ -1,5 +1,3 @@
-from typing import Literal
-
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
@@ -8,17 +6,13 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .utils import get_device_info
-from .coordinator import DaveyCoordinator
 from .const import DOMAIN, DAVEY_STATUS_SENSOR_KEY, PH_BIN_STATUS_KEY, ORP_BIN_STATUS_KEY, TEMP_BIN_STATUS_KEY, \
     SALT_BIN_STATUS_KEY, VSD_BIN_STATUS_KEY, FLOW_ERROR_KEY, PH_ERROR_KEY, ORP_ERROR_KEY, SALT_ERROR_KEY
+from .utils import get_device_info
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    davey = hass.data[DOMAIN][config_entry.entry_id]
-    coordinator = DaveyCoordinator(hass, davey, config_entry)
-
-    await coordinator.async_config_entry_first_refresh()
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Binary Sensors
     binary_sensors = [

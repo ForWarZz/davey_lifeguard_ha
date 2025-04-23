@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     UnitOfTemperature,
     UnitOfElectricPotential,
-    CONCENTRATION_PARTS_PER_MILLION
+    CONCENTRATION_PARTS_PER_MILLION, PERCENTAGE
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -15,22 +15,18 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .utils import get_device_info
 from .const import (
     DOMAIN,
     PH_SENSOR_KEY, TEMP_SENSOR_KEY, SALT_SENSOR_KEY, ORP_SENSOR_KEY,
-    VSD_PUMP_SPEED_KEY, PH_TARGET_KEY, SALT_TARGET_KEY, ORP_TARGET_KEY
+    VSD_PUMP_SPEED_KEY, PH_TARGET_KEY, ORP_TARGET_KEY, CELL_OUTPUT_KEY
 )
-from .coordinator import DaveyCoordinator
+from .utils import get_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    davey = hass.data[DOMAIN][config_entry.entry_id]
-    coordinator = DaveyCoordinator(hass, davey, config_entry)
-
-    await coordinator.async_config_entry_first_refresh()
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Sensors
     sensors = [
@@ -42,6 +38,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
         DaveySensor(coordinator, PH_TARGET_KEY, "Consigne pH", "mdi:flask-outline"),
         DaveySensor(coordinator, ORP_TARGET_KEY, "Consigne ORP", "mdi:current-dc"),
+
+        DaveySensor(coordinator, CELL_OUTPUT_KEY, "Production de chlore", "mdi:water-percent"),
     ]
 
     async_add_entities(sensors)
@@ -72,10 +70,12 @@ class DaveySensor(SensorEntity, CoordinatorEntity):
             return UnitOfTemperature.CELSIUS
         elif "orp" in self.key:
             return UnitOfElectricPotential.MILLIVOLT
-        elif "salt" in self.key:
+        elif "salinity" in self.key:
             return CONCENTRATION_PARTS_PER_MILLION
         elif "ph" in self.key:
             return "pH"
+        elif self.key == CELL_OUTPUT_KEY:
+            return PERCENTAGE
         return None
 
     @property
