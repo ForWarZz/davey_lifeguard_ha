@@ -16,16 +16,17 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     modes = [
-        DaveyModeSwitch(coordinator, MANUAL_OPTION_KEY, "Mode Manuel", "mdi:hand-back-left"),
-        DaveyModeSwitch(coordinator, BOOT_OPTION_KEY, "Mode Boost", "mdi:flash")
+        DaveyModeSwitch(coordinator, MANUAL_OPTION_KEY, "mdi:hand-back-left"),
+        DaveyModeSwitch(coordinator, BOOT_OPTION_KEY, "mdi:flash")
     ]
 
     async_add_entities(modes)
 
 class DaveyModeSwitch(SwitchEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, name, icon):
+    def __init__(self, coordinator, key, icon):
         super().__init__(coordinator)
-        self._attr_name = name
+        self._attr_translation_key = key
+        self._attr_has_entity_name = True
         self.key = key
         self._attr_icon = icon
 
@@ -59,5 +60,5 @@ class DaveyModeSwitch(SwitchEntity, CoordinatorEntity):
         )
 
     @property
-    def unique_id(self):
+    def unique_id(self) -> str:
         return f"{DOMAIN}_switch_{self.key}"

@@ -16,7 +16,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
     selects = [
         DaveySelect(
             coordinator=coordinator,
-            name="Vitesse VSD",
+            translation_key="vsd_pump_speed",
             data_key=VSD_PUMP_SPEED_KEY,
             target_key=VSD_PUMP_SPEED_KEY,
             options=["2", "4", "6", "8", "10"],
@@ -24,7 +24,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
         ),
         DaveySelect(
             coordinator=coordinator,
-            name="Consigne pH",
+            translation_key="ph_target",
             data_key=PH_TARGET_KEY,
             target_key="ph",
             options=[f"{v:.1f}" for v in [x * 0.1 for x in range(70, 80)]],
@@ -32,7 +32,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
         ),
         DaveySelect(
             coordinator=coordinator,
-            name="Consigne ORP",
+            translation_key="orp_target",
             data_key=ORP_TARGET_KEY,
             target_key="orp",
             options=[str(v) for v in range(600, 1000, 50)],
@@ -44,10 +44,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
 
 class DaveySelect(CoordinatorEntity, SelectEntity):
-    def __init__(self, coordinator: DaveyCoordinator, name: str, data_key: str, target_key: str, options: list[str], icon: str):
+    def __init__(self, coordinator: DaveyCoordinator, translation_key: str, data_key: str, target_key: str, options: list[str], icon: str):
         super().__init__(coordinator)
-        self._attr_name = name
         self._attr_icon = icon
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
         self._attr_options = options
 
         self.data_key = data_key

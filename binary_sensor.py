@@ -18,24 +18,25 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
     binary_sensors = [
         DaveyBinarySensor(coordinator, DAVEY_STATUS_SENSOR_KEY, "Statut de l'appareil"),
 
-        DaveyBinarySensor(coordinator, PH_BIN_STATUS_KEY, "Sonde pH"),
-        DaveyBinarySensor(coordinator, ORP_BIN_STATUS_KEY, "Sonde ORP"),
-        DaveyBinarySensor(coordinator, TEMP_BIN_STATUS_KEY, "Sonde température"),
-        DaveyBinarySensor(coordinator, SALT_BIN_STATUS_KEY, "Sonde sel"),
-        DaveyBinarySensor(coordinator, VSD_BIN_STATUS_KEY, "Pompe VSD"),
+        DaveyBinarySensor(coordinator, PH_BIN_STATUS_KEY, "ph_connected"),
+        DaveyBinarySensor(coordinator, ORP_BIN_STATUS_KEY, "orp_connected"),
+        DaveyBinarySensor(coordinator, TEMP_BIN_STATUS_KEY, "temp_connected"),
+        DaveyBinarySensor(coordinator, SALT_BIN_STATUS_KEY, "salinity_connected"),
+        DaveyBinarySensor(coordinator, VSD_BIN_STATUS_KEY, "vsd_connected"),
 
-        DaveyErrorBinarySensor(coordinator, FLOW_ERROR_KEY, "Erreur de débit"),
-        DaveyErrorBinarySensor(coordinator, PH_ERROR_KEY, "Erreur pH"),
-        DaveyErrorBinarySensor(coordinator, ORP_ERROR_KEY, "Erreur ORP"),
-        DaveyErrorBinarySensor(coordinator, SALT_ERROR_KEY, "Erreur sel"),
+        DaveyErrorBinarySensor(coordinator, FLOW_ERROR_KEY, "flow_error"),
+        DaveyErrorBinarySensor(coordinator, PH_ERROR_KEY, "ph_error"),
+        DaveyErrorBinarySensor(coordinator, ORP_ERROR_KEY, "orp_error"),
+        DaveyErrorBinarySensor(coordinator, SALT_ERROR_KEY, "salt_error"),
     ]
 
     async_add_entities(binary_sensors)
 
 class DaveyBinarySensor(BinarySensorEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, name):
+    def __init__(self, coordinator, key, translation_key):
         super().__init__(coordinator)
-        self._attr_name = name
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
         self.key = key
 
     @property
@@ -59,9 +60,10 @@ class DaveyBinarySensor(BinarySensorEntity, CoordinatorEntity):
         return EntityCategory.DIAGNOSTIC
 
 class DaveyErrorBinarySensor(BinarySensorEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, name):
+    def __init__(self, coordinator, key, translation_key):
         super().__init__(coordinator)
-        self._attr_name = name
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
         self.key = key
 
     @property

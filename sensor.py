@@ -30,25 +30,26 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
     # Sensors
     sensors = [
-        DaveySensor(coordinator, PH_SENSOR_KEY, "Niveau pH", "mdi:flask-outline"),
-        DaveySensor(coordinator, ORP_SENSOR_KEY, "Niveau ORP", "mdi:current-dc"),
-        DaveySensor(coordinator, SALT_SENSOR_KEY, "Niveau sel"),
-        DaveySensor(coordinator, TEMP_SENSOR_KEY, "Température eau", "mdi:thermometer-water"),
-        DaveySensor(coordinator, VSD_PUMP_SPEED_KEY, "Vitesse VSD", "mdi:fan"),
+        DaveySensor(coordinator, PH_SENSOR_KEY, "ph", "mdi:flask-outline"),
+        DaveySensor(coordinator, ORP_SENSOR_KEY, "orp", "mdi:current-dc"),
+        DaveySensor(coordinator, SALT_SENSOR_KEY, "salinity"),
+        DaveySensor(coordinator, TEMP_SENSOR_KEY, "temp", "mdi:thermometer-water"),
+        DaveySensor(coordinator, VSD_PUMP_SPEED_KEY, "vsd_pump_speed", "mdi:fan"),
 
-        DaveySensor(coordinator, PH_TARGET_KEY, "Consigne pH", "mdi:flask-outline"),
-        DaveySensor(coordinator, ORP_TARGET_KEY, "Consigne ORP", "mdi:current-dc"),
+        DaveySensor(coordinator, PH_TARGET_KEY, "ph_target", "mdi:flask-outline"),
+        DaveySensor(coordinator, ORP_TARGET_KEY, "orp_target", "mdi:current-dc"),
 
-        DaveySensor(coordinator, CELL_OUTPUT_KEY, "Production de chlore", "mdi:water-percent"),
+        DaveySensor(coordinator, CELL_OUTPUT_KEY, "cell_output", "mdi:water-percent"),
     ]
 
     async_add_entities(sensors)
 
 
 class DaveySensor(SensorEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, name, icon=None):
+    def __init__(self, coordinator, key, translation_key, icon=None):
         super().__init__(coordinator)
-        self._attr_name = name
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
         self.key = key
         self._attr_icon = icon
 
