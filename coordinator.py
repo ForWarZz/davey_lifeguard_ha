@@ -6,7 +6,7 @@ import async_timeout
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.exceptions import ConfigEntryAuthFailed
 
-from .davey.davey_exception import TokenException, DaveyAuthException, DaveyRequestException, DaveyAPIException
+from .davey.davey_exception import DaveyAuthException, DaveyRequestException, DaveyAPIException
 from .const import DOMAIN
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
