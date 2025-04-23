@@ -13,16 +13,30 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class DaveyCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, davey_device, config_entry):
+    def __init__(self, hass, davey_api, config_entry):
         scan_interval = config_entry.data[CONF_SCAN_INTERVAL]
 
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(seconds=scan_interval), update_method=self._async_update_data)
-        self.davey_device = davey_device
+        self.davey_api = davey_api
 
     async def _async_update_data(self):
         try:
             async with async_timeout.timeout(10):
-                return await self.davey_device.get_device_data()
+                _LOGGER.debug("Fetching device data")
+                device_data = await self.davey_api.fetch_account_data()
+                device_status = await self.davey_api.fetch_device_data()
+                _LOGGER.debug("Device data fetched successfully")
+
+                full_data = device_data | device_status
+
+                if full_data is None:
+                    _LOGGER.warning("No data received from the device...")
+                    return None
+
+                _LOGGER.debug("Device data fetched successfully")
+                _LOGGER.debug(f"Device data: {full_data}")
+
+                return full_data
         except TokenException as err:
             _LOGGER.error(f'Token error: {err}', exc_info=True)
             await self.__handle_token_error()

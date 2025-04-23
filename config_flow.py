@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from homeassistant.const import CONF_SCAN_INTERVAL, CONF_PASSWORD, CONF_EMAIL
 
-from .davey.api import login
+from .davey.api import authenticate
 from .const import DOMAIN, CONF_TOKEN, DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, CONF_REFRESH_TOKEN, CONF_USER_ID
 import logging
 
@@ -21,7 +21,8 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                token, refresh_token, user_id = await login(user_input[CONF_EMAIL], user_input[CONF_PASSWORD])
+                token, refresh_token, user_id = await authenticate(user_input[CONF_EMAIL], user_input[CONF_PASSWORD])
+
                 return self.async_create_entry(
                     title=DEFAULT_NAME,
                     data={
