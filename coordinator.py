@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from datetime import timedelta
 
@@ -23,11 +24,12 @@ class DaveyCoordinator(DataUpdateCoordinator):
         try:
             async with async_timeout.timeout(10):
                 _LOGGER.debug("Fetching device data")
-                device_data = await self.davey_api.fetch_account_data()
-                device_status = await self.davey_api.fetch_device_data()
-                _LOGGER.debug("Device data fetched successfully")
+                account_data, status_data = await asyncio.gather(
+                    self.davey_api.fetch_account_data(),
+                    self.davey_api.fetch_device_data()
+                )
 
-                full_data = device_data | device_status
+                full_data = account_data | status_data
 
                 if full_data is None:
                     _LOGGER.warning("No data received from the device...")
