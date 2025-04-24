@@ -11,5 +11,6 @@
 
   ],
   "iot_class": "cloud_polling",
-  "config_flow": true
+  "config_flow": true,
+  "icon_url": "https://github.com/ForWarZz/davey_lifeguard_ha/blob/77f98dc825342ba399692e3eed729a76c39f6b6a/ressources/logo.png?raw=true"
 }
