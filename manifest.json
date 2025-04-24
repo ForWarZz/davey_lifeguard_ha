@@ -2,6 +2,7 @@
   "domain": "davey_lifeguard",
   "name": "Davey Lifeguard",
   "version": "1.0",
+  "logo": "logo.png",
   "documentation": "",
   "dependencies": [],
   "codeowners": [

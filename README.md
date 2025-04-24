@@ -1,5 +1,7 @@
 # Home Assistant Integration: Davey Lifeguard
 
+![image](ressources/logo.png)
+
 ## Project Summary:
 This project is a custom integration for Home Assistant, designed to leverage and control data from a Davey Lifeguard device, a connected pool management system.
 
@@ -15,16 +17,22 @@ This is an unofficial integration, developed by an independent developer, with t
 * Chlorine Production Rate
 * VSD Pump Speed
 
+![image](ressources/sensors.png)
+
 ### ✅ Equipment Status and Diagnostics:
 * Connection status of various probes (temperature, pH, ORP, salt)
 * Device status
 * Error detection (flow, ORP, pH, salt)
+
+![image](ressources/diagnostic.png)
 
 ### 🛠️ Equipment Control (via Home Assistant entities):
 * Activation/deactivation of **operating modes**: manual, boost
 * Selection of the **pH setpoint**
 * Selection of the **ORP setpoint**
 * Adjustment of the **VSD pump speed**
+
+![image](ressources/control.png)
 
 ## 🛠️ Technical Architecture:
 * Utilizes a `DataUpdateCoordinator` to centralize API requests and synchronize entities.
