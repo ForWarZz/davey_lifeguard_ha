@@ -2,14 +2,16 @@
 
 ![Davey Lifeguard Logo](ressources/logo.png)
 
-## Project Summary:
-This project is a custom integration for Home Assistant, designed to leverage and control data from a Davey Lifeguard device, a connected pool management system.
+## Project Summary
 
-This is an unofficial integration, developed by an independent developer, with the aim of centralizing pool-related data and actions within the Home Assistant home automation interface.
+This project is a custom integration for Home Assistant, designed to seamlessly integrate with Davey Lifeguard connected pool management systems. Developed by an independent enthusiast, this integration aims to centralize the monitoring and control of your pool directly within the Home Assistant interface.
 
-## Main Features of the Integration:
+## Key Features
 
-### 🔍 Real-time Sensor Monitoring:
+This initial release offers the following functionalities:
+
+### Real-time Sensor Monitoring
+Keep a close eye on your pool's vital parameters:
 * Water pH
 * ORP (Oxidation-Reduction Potential)
 * Water Temperature
@@ -19,88 +21,81 @@ This is an unofficial integration, developed by an independent developer, with t
 
 ![Real-time Sensors in Home Assistant](ressources/sensors.png)
 
-### ✅ Equipment Status and Diagnostics:
-* Connection status of various probes (temperature, pH, ORP, salt)
-* Device status
-* Error detection (flow, ORP, pH, salt)
+### Equipment Status and Diagnostics
+Stay informed about your system's health:
+* Connection status of all probes
+* Overall device status
+* Detection of common errors (flow, ORP, pH, salt)
 
 ![Equipment Diagnostics in Home Assistant](ressources/diagnostic.png)
 
-### 🛠️ Equipment Control (via Home Assistant entities):
-* Activation/deactivation of **operating modes**: manual, boost
-* Selection of the **pH setpoint**
-* Selection of the **ORP setpoint**
-* Adjustment of the **VSD pump speed**
+### Equipment Control
+Manage essential pool functions directly from Home Assistant:
+* Activate/deactivate operating modes (manual, boost)
+* Set the desired pH level
+* Set the desired ORP level
+* Adjust the VSD pump speed
 
 ![Equipment Control in Home Assistant](ressources/control.png)
 
-## 🛠️ Technical Architecture:
-* Utilizes a `DataUpdateCoordinator` to centralize API requests and synchronize entities.
-* Communication with the Davey cloud API (no local access).
-* Authentication via token / refresh token, stored in `config_entry`.
-* Grouped and optimized API requests using `asyncio.gather`.
-* Use of `translations` to manage names based on the user's language.
-* Organization of entities by type: `sensor`, `binary_sensor`, `switch`, `select`.
-* Multilingual support (fr, en).
+## Technical Overview
 
-## 🌍 Target Audience:
-* Home Assistant users who own a **Davey Lifeguard system**.
-* Home automation administrators looking to centralize their pool management.
-* Developers interested in improving the integration or contributing.
+* Leverages Home Assistant's `DataUpdateCoordinator` for efficient data retrieval.
+* Communicates with the Davey cloud API (local access is currently unavailable).
+* Secure authentication using tokens and refresh tokens via `config_entry`.
+* Optimized API requests using `asyncio.gather`.
+* Supports both English and French, with dynamic entity naming based on your language preference.
+* Organizes entities logically as `sensor`, `binary_sensor`, `switch`, and `select` components.
+* **UI-first integration**: Configuration is done entirely through the Home Assistant UI, no YAML editing required.
+* Compatible with Home Assistant version 2023.x and later.
 
-## 🚧 Project Status:
-* ✅ First functional version
-* 💡 Under development
-* ✅ Already successfully tested on a real Davey Lifeguard system
+## Target Audience
 
-## 📝 Technical Specifications & Remarks:
-* Requires Home Assistant ≥ 2023.x
-* **UI-first** integration: no YAML configuration is necessary.
-* The integration relies on the official API used by the Davey mobile application.
-* ⚠️ **No local access currently possible**: depends on the Davey cloud.
+This integration is primarily intended for:
 
-## 💾 Installation:
+* Home Assistant users who own a Davey Lifeguard system.
+* Individuals seeking to integrate their pool management into their smart home ecosystem.
+* Developers interested in contributing to the project's growth.
 
-There are two ways to install this integration: via HACS (recommended) or manually.
+## Project Status
 
-### Installation via HACS (Home Assistant Community Store):
+* ✅ First functional version released.
+* 🚧 Currently under active development.
+* ✅ Successfully tested with a real Davey Lifeguard system.
 
-If you have HACS installed, you can easily add this integration as a custom repository and install it:
+## Installation
 
-1.  **Ensure HACS is installed.** If you don't have HACS, follow the installation guide here: [https://hacs.xyz/docs/installation](https://hacs.xyz/docs/installation).
+You can install this integration using either HACS (recommended) or a manual approach.
 
+### Installation via HACS (Home Assistant Community Store)
+
+1.  **Ensure HACS is installed.** If not, please follow the official installation guide: [https://hacs.xyz/docs/installation](https://hacs.xyz/docs/installation).
 2.  **Add this repository as a custom repository in HACS:**
-    * In Home Assistant, navigate to "HACS" in the sidebar.
-    * Click on "Integrations".
+    * Navigate to "HACS" in the Home Assistant sidebar.
+    * Go to "Integrations".
     * Click the three dots (`...`) in the top right corner and select "Custom repositories".
     * In the "Add custom repository" dialog:
         * **Repository:** `https://github.com/ForWarZz/davey_lifeguard_ha`
         * **Category:** Integration
         * Click "Add".
-
 3.  **Install the "Davey Lifeguard" integration:**
     * After adding the repository, close the "Custom repositories" dialog.
-    * Click the "+" button in the bottom right corner of the HACS Integrations page ("Explore & add repositories").
+    * Click the "+" button at the bottom right of the HACS Integrations page ("Explore & add repositories").
     * Search for "Davey Lifeguard" and click on it.
-    * Click the "Download" button.
-
+    * Click "Download".
 4.  **Restart your Home Assistant server.**
-
 5.  **Configure the integration:**
-    * After the restart, go to "Settings" > "Devices & Services".
-    * Click the "+ Add Integration" button in the bottom right corner.
-    * Search for "Davey Lifeguard" and click on it.
-    * Follow the on-screen instructions to enter your Davey Lifeguard account credentials (likely the email and password used for the Davey mobile app).
+    * After restarting, go to "Settings" > "Devices & Services".
+    * Click "+ Add Integration" in the bottom right corner.
+    * Search for "Davey Lifeguard" and click to configure.
+    * Follow the on-screen prompts to enter your Davey Lifeguard account credentials.
 
-### Manual Installation (Alternative):
+### Manual Installation
 
-1.  **Access your Home Assistant configuration directory.** This is the directory where your `configuration.yaml` file is located.
-
-2.  **Create a new directory named `custom_components`** within your configuration directory if it doesn't already exist.
-
-3.  **Inside the `custom_components` directory, create another new directory named `davey_lifeguard`.**
-
-4.  **Download the files for this integration** from the repository and place them inside the `custom_components/davey_lifeguard/` directory. The file structure should look like this:
+1.  **Access your Home Assistant configuration directory.**
+2.  **Create a `custom_components` directory** if it doesn't exist.
+3.  **Inside `custom_components`, create a directory named `davey_lifeguard`.**
+4.  **Download the integration files** from the repository and place them in the `custom_components/davey_lifeguard/` directory.
     ```
     <your_config_directory>/
     └── custom_components/
@@ -111,23 +106,20 @@ If you have HACS installed, you can easily add this integration as a custom repo
             ├── switch.py
             └── ... (other integration files)
     ```
-
 5.  **Restart your Home Assistant server.**
+6.  **Configure the integration:** Follow the same configuration steps as in the HACS installation.
 
-6.  **Configure the integration:** Follow the same steps as in the HACS installation (step 5).
+## Contributing
 
-## 🤝 Possible Contributions:
-* Optimization of Python code.
-* Addition of an advanced configuration interface.
-* Addition of new sensors or entities.
-* Additional translations (es, de..).
+As this is a personal project and my first Home Assistant integration, contributions are highly welcome! Areas for potential contribution include:
 
-## Important Disclaimer Regarding This Initial Release:
+* Code optimization and improvements.
+* Development of an advanced configuration UI.
+* Adding support for more sensors and entities.
+* Providing translations for additional languages.
 
-Given that this is my very first Home Assistant integration, it is crucial to emphasize that **improvements are certainly necessary**.
+## Important Notes
 
-Consequently, it is highly likely that **bugs may be present** in this initial version. Your patience and feedback will be invaluable in identifying and correcting these potential issues.
+This is an early release, and as such, **improvements are expected, and bugs may be present.** Your patience and feedback are greatly appreciated in helping to refine this integration. Please also note that **not all planned features are currently implemented**, and development will continue based on user feedback and ongoing efforts.
 
-Furthermore, please note that **not all described features are yet available** in this first iteration. Development is ongoing, and new capabilities will be added progressively as needed/suggested.
-
-Thank you for your understanding and leniency during this initial development phase. Your testing and constructive comments will be of great help in evolving this integration.
+Thank you for your interest and support! I look forward to your feedback and to making this integration even better.
