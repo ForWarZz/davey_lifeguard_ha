@@ -49,7 +49,7 @@ This is an unofficial integration, developed by an independent developer, with t
 * Developers interested in improving the integration or contributing.
 
 ## 🚧 Project Status:
-* 🧪 First functional version
+* ✅ First functional version
 * 💡 Under development
 * ✅ Already successfully tested on a real Davey Lifeguard system
 
@@ -61,7 +61,38 @@ This is an unofficial integration, developed by an independent developer, with t
 
 ## 💾 Installation:
 
-As this is a custom integration, it needs to be added to your Home Assistant instance manually. Here's how:
+There are two ways to install this integration: via HACS (recommended) or manually.
+
+### Installation via HACS (Home Assistant Community Store):
+
+If you have HACS installed, you can easily add this integration as a custom repository and install it:
+
+1.  **Ensure HACS is installed.** If you don't have HACS, follow the installation guide here: [https://hacs.xyz/docs/installation](https://hacs.xyz/docs/installation).
+
+2.  **Add this repository as a custom repository in HACS:**
+    * In Home Assistant, navigate to "HACS" in the sidebar.
+    * Click on "Integrations".
+    * Click the three dots (`...`) in the top right corner and select "Custom repositories".
+    * In the "Add custom repository" dialog:
+        * **Repository:** `https://github.com/ForWarZz/davey_lifeguard_ha`
+        * **Category:** Integration
+        * Click "Add".
+
+3.  **Install the "Davey Lifeguard" integration:**
+    * After adding the repository, close the "Custom repositories" dialog.
+    * Click the "+" button in the bottom right corner of the HACS Integrations page ("Explore & add repositories").
+    * Search for "Davey Lifeguard" and click on it.
+    * Click the "Download" button.
+
+4.  **Restart your Home Assistant server.**
+
+5.  **Configure the integration:**
+    * After the restart, go to "Settings" > "Devices & Services".
+    * Click the "+ Add Integration" button in the bottom right corner.
+    * Search for "Davey Lifeguard" and click on it.
+    * Follow the on-screen instructions to enter your Davey Lifeguard account credentials (likely the email and password used for the Davey mobile app).
+
+### Manual Installation (Alternative):
 
 1.  **Access your Home Assistant configuration directory.** This is the directory where your `configuration.yaml` file is located.
 
@@ -69,7 +100,7 @@ As this is a custom integration, it needs to be added to your Home Assistant ins
 
 3.  **Inside the `custom_components` directory, create another new directory named `davey_lifeguard`.**
 
-4.  **Download the files for this integration** from the repository (once it is public) and place them inside the `custom_components/davey_lifeguard/` directory. The file structure should look like this:
+4.  **Download the files for this integration** from the repository and place them inside the `custom_components/davey_lifeguard/` directory. The file structure should look like this:
     ```
     <your_config_directory>/
     └── custom_components/
@@ -83,18 +114,14 @@ As this is a custom integration, it needs to be added to your Home Assistant ins
 
 5.  **Restart your Home Assistant server.**
 
-6.  **Configure the integration:**
-    * After the restart, go to "Settings" > "Devices & Services".
-    * Click the "+ Add Integration" button in the bottom right corner.
-    * Search for "Davey Lifeguard" and click on it.
-    * Follow the on-screen instructions to enter your Davey Lifeguard account credentials (likely the email and password used for the Davey mobile app).
+6.  **Configure the integration:** Follow the same steps as in the HACS installation (step 5).
 
 ## 🤝 Possible Contributions:
 * Optimization of Python code.
 * Addition of an advanced configuration interface.
 * Addition of new sensors or entities.
 * Additional translations (es, de, etc.).
-* Preparation for HACS (structure + release).
+* Preparation for HACS (structure + release) - *Already available via custom repository!*
 
 ## Important Disclaimer Regarding This Initial Release:
 
