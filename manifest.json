@@ -2,8 +2,7 @@
   "domain": "davey_lifeguard",
   "name": "Davey Lifeguard",
   "version": "1.0",
-  "logo": "ressources/logo.png",
-  "documentation": "",
+  "documentation": "https://github.com/ForWarZz/davey_lifeguard_ha",
   "dependencies": [],
   "codeowners": [
     "@forwarzz"
