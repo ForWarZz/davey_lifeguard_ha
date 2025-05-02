@@ -31,8 +31,8 @@
       "cell_output": {"name": "Production de chlore"}
     },
     "switch": {
-      "manual": {"name": "Mode manuel"},
-      "boost": {"name": "Mode boost"}
+      "MANUAL": {"name": "Mode manuel"},
+      "BOOST": {"name": "Mode boost"}
     },
     "binary_sensor": {
       "ph_connected": {"name": "Sonde pH"},
