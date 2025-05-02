@@ -52,5 +52,5 @@ ORP_ERROR_KEY = 'orpError'
 
 VSD_BIN_STATUS_KEY = 'isVsdPumpConnected'
 
-MANUAL_OPTION_KEY = 'manual'
-BOOT_OPTION_KEY = 'boost'
+MANUAL_OPTION_KEY = 'MANUAL'
+BOOT_OPTION_KEY = 'BOOST'

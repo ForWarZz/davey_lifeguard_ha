@@ -9,6 +9,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .utils import get_device_info
 from .const import DOMAIN, MANUAL_OPTION_KEY, BOOT_OPTION_KEY
+from .coordinator import DaveyCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
     async_add_entities(modes)
 
 class DaveyModeSwitch(SwitchEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, icon):
+    def __init__(self, coordinator: DaveyCoordinator, key, icon):
         super().__init__(coordinator)
         self._attr_translation_key = key
         self._attr_has_entity_name = True
