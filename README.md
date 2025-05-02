@@ -69,7 +69,7 @@ You can install this integration using either HACS (recommended) or a manual app
 
 ### Installation via HACS (Home Assistant Community Store)
 
-1.  **Ensure HACS is installed.** If not, please follow the official installation guide: [https://hacs.xyz/docs/installation](https://hacs.xyz/docs/installation).
+1.  **Ensure HACS is installed.** If not, please follow the official installation guide: [https://hacs.xyz/docs/use/](https://hacs.xyz/docs/use/).
 2.  **Add this repository as a custom repository in HACS:**
     * Navigate to "HACS" in the Home Assistant sidebar.
     * Go to "Integrations".
