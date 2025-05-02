@@ -16,7 +16,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
     # Binary Sensors
     binary_sensors = [
-        DaveyBinarySensor(coordinator, DAVEY_STATUS_SENSOR_KEY, "Statut de l'appareil"),
+        DaveyBinarySensor(coordinator, DAVEY_STATUS_SENSOR_KEY, "is_connected"),
 
         DaveyBinarySensor(coordinator, PH_BIN_STATUS_KEY, "ph_connected"),
         DaveyBinarySensor(coordinator, ORP_BIN_STATUS_KEY, "orp_connected"),
