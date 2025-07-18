@@ -1,10 +1,13 @@
+"""Custom exceptions for Davey API interactions."""
+
+
 class DaveyAPIException(Exception):
-    pass
+    """Base exception for Davey API errors."""
 
 
 class DaveyAuthException(DaveyAPIException):
-    pass
+    """Exception raised for authentication errors in Davey API."""
 
 
 class DaveyRequestException(DaveyAPIException):
-    pass
+    """Exception raised for errors during Davey API requests."""

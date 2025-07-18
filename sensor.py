@@ -1,13 +1,20 @@
-import logging
+"""Sensor platform for Davey Lifeguard integration."""
+
 from datetime import date, datetime
 from decimal import Decimal
+import logging
 
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    UnitOfTemperature,
+    CONCENTRATION_PARTS_PER_MILLION,
+    PERCENTAGE,
     UnitOfElectricPotential,
-    CONCENTRATION_PARTS_PER_MILLION, PERCENTAGE
+    UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -16,16 +23,28 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
+    CELL_OUTPUT_KEY,
     DOMAIN,
-    PH_SENSOR_KEY, TEMP_SENSOR_KEY, SALT_SENSOR_KEY, ORP_SENSOR_KEY,
-    VSD_PUMP_SPEED_KEY, PH_TARGET_KEY, ORP_TARGET_KEY, CELL_OUTPUT_KEY
+    ORP_SENSOR_KEY,
+    ORP_TARGET_KEY,
+    PH_SENSOR_KEY,
+    PH_TARGET_KEY,
+    SALT_SENSOR_KEY,
+    TEMP_SENSOR_KEY,
+    VSD_PUMP_SPEED_KEY,
 )
 from .utils import get_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+):
+    """Set up the Davey Lifeguard sensors from a config entry."""
+
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Sensors
@@ -35,10 +54,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
         DaveySensor(coordinator, SALT_SENSOR_KEY, "salinity"),
         DaveySensor(coordinator, TEMP_SENSOR_KEY, "temp", "mdi:thermometer-water"),
         DaveySensor(coordinator, VSD_PUMP_SPEED_KEY, "vsd_pump_speed", "mdi:fan"),
-
         DaveySensor(coordinator, PH_TARGET_KEY, "ph_target", "mdi:flask-outline"),
         DaveySensor(coordinator, ORP_TARGET_KEY, "orp_target", "mdi:current-dc"),
-
         DaveySensor(coordinator, CELL_OUTPUT_KEY, "cell_output", "mdi:water-percent"),
     ]
 
@@ -46,7 +63,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
 
 
 class DaveySensor(SensorEntity, CoordinatorEntity):
-    def __init__(self, coordinator, key, translation_key, icon=None):
+    """Representation of a Davey Lifeguard sensor."""
+
+    def __init__(self, coordinator, key, translation_key, icon=None) -> None:
+        """Initialize the Davey sensor."""
         super().__init__(coordinator)
         self._attr_translation_key = translation_key
         self._attr_has_entity_name = True
@@ -55,10 +75,12 @@ class DaveySensor(SensorEntity, CoordinatorEntity):
 
     @property
     def native_value(self) -> StateType | date | datetime | Decimal:
+        """Return the state of the sensor."""
         return self.coordinator.data.get(self.key, None)
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device information for the sensor."""
         return get_device_info(
             self.coordinator.data["serialNumber"],
             self.coordinator.data["firmwareVersion"],
@@ -67,28 +89,32 @@ class DaveySensor(SensorEntity, CoordinatorEntity):
 
     @property
     def native_unit_of_measurement(self):
+        """Return the unit of measurement for the sensor."""
         if self.key == TEMP_SENSOR_KEY:
             return UnitOfTemperature.CELSIUS
-        elif "orp" in self.key:
+        if "orp" in self.key:
             return UnitOfElectricPotential.MILLIVOLT
-        elif "salinity" in self.key:
+        if "salinity" in self.key:
             return CONCENTRATION_PARTS_PER_MILLION
-        elif "ph" in self.key:
+        if "ph" in self.key:
             return "pH"
-        elif self.key == CELL_OUTPUT_KEY:
+        if self.key == CELL_OUTPUT_KEY:
             return PERCENTAGE
         return None
 
     @property
     def unique_id(self):
+        """Return a unique ID for the sensor."""
         return f"{DOMAIN}_sensor_{self.key}"
 
     @property
     def state_class(self):
+        """Return the state class of the sensor."""
         return SensorStateClass.MEASUREMENT
 
     @property
     def device_class(self):
+        """Return the device class of the sensor."""
         if self.key == TEMP_SENSOR_KEY:
             return SensorDeviceClass.TEMPERATURE
         return None
