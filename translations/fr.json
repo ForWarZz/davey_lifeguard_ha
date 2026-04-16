@@ -10,48 +10,102 @@
           "password": "Mot de passe",
           "scan_interval": "Intervalle de mise à jour (en secondes)"
         }
+      },
+      "reconfigure": {
+        "title": "Reconfigurer Davey",
+        "description": "Mettez à jour vos identifiants et l'intervalle de mise à jour sans supprimer l'intégration.",
+        "data": {
+          "email": "Adresse e-mail",
+          "password": "Mot de passe",
+          "scan_interval": "Intervalle de mise à jour (en secondes)"
+        }
       }
     },
     "error": {
       "invalid_credentials": "Identifiants invalides."
     },
     "abort": {
-      "already_configured": "Ce compte Davey est déjà configuré."
+      "already_configured": "Ce compte Davey est déjà configuré.",
+      "reconfigure_successful": "La reconfiguration a été effectuée avec succès."
     }
   },
   "entity": {
     "sensor": {
-      "ph": {"name": "Niveau pH"},
-      "orp": {"name": "Niveau ORP"},
-      "salinity": {"name": "Niveau de sel"},
-      "temp": {"name": "Température de l'eau"},
-      "vsd_pump_speed": {"name": "Vitesse VSD"},
-      "ph_target": {"name": "Consigne pH"},
-      "orp_target": {"name": "Consigne ORP"},
-      "cell_output": {"name": "Production de chlore"}
+      "ph": {
+        "name": "Niveau pH"
+      },
+      "orp": {
+        "name": "Niveau ORP"
+      },
+      "salinity": {
+        "name": "Niveau de sel"
+      },
+      "temp": {
+        "name": "Température de l'eau"
+      },
+      "vsd_pump_speed": {
+        "name": "Vitesse VSD"
+      },
+      "ph_target": {
+        "name": "Consigne pH"
+      },
+      "orp_target": {
+        "name": "Consigne ORP"
+      },
+      "cell_output": {
+        "name": "Production de chlore"
+      }
     },
     "switch": {
-      "MANUAL": {"name": "Mode manuel"},
-      "BOOST": {"name": "Mode boost"}
+      "MANUAL": {
+        "name": "Mode manuel"
+      },
+      "BOOST": {
+        "name": "Mode boost"
+      }
     },
     "binary_sensor": {
-      "ph_connected": {"name": "Sonde pH"},
-      "orp_connected": {"name": "Sonde ORP"},
-      "temp_connected": {"name": "Sonde température"},
-      "salinity_connected": {"name": "Sonde sel"},
-      "vsd_connected": {"name": "Pompe VSD"},
-
-      "ph_error": {"name": "Erreur pH"},
-      "orp_error": {"name": "Erreur ORP"},
-      "salt_error": {"name": "Erreur sel"},
-      "flow_error": {"name": "Erreur débit"},
-
-      "is_connected": {"name": "Appareil connecté"}
+      "ph_connected": {
+        "name": "Sonde pH"
+      },
+      "orp_connected": {
+        "name": "Sonde ORP"
+      },
+      "temp_connected": {
+        "name": "Sonde température"
+      },
+      "salinity_connected": {
+        "name": "Sonde sel"
+      },
+      "vsd_connected": {
+        "name": "Pompe VSD"
+      },
+      "ph_error": {
+        "name": "Erreur pH"
+      },
+      "orp_error": {
+        "name": "Erreur ORP"
+      },
+      "salt_error": {
+        "name": "Erreur sel"
+      },
+      "flow_error": {
+        "name": "Erreur débit"
+      },
+      "is_connected": {
+        "name": "Appareil connecté"
+      }
     },
     "select": {
-      "ph_target": {"name": "Consigne pH"},
-      "orp_target": {"name": "Consigne ORP"},
-      "vsd_pump_speed": {"name": "Vitesse VSD"}
+      "ph_target": {
+        "name": "Consigne pH"
+      },
+      "orp_target": {
+        "name": "Consigne ORP"
+      },
+      "vsd_pump_speed": {
+        "name": "Vitesse VSD"
+      }
     }
   }
 }

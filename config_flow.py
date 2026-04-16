@@ -2,7 +2,7 @@
 
 from collections.abc import Mapping
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from aiohttp import ClientResponseError
 import voluptuous as vol
@@ -29,6 +29,18 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    @staticmethod
+    def _build_schema(default_scan_interval: int) -> vol.Schema:
+        return vol.Schema({
+            vol.Required(CONF_EMAIL): str,
+            vol.Required(CONF_PASSWORD): str,
+            vol.Required(CONF_SCAN_INTERVAL, default=default_scan_interval): int,
+        })
+
+    @staticmethod
+    async def _authenticate_input(user_input: dict[str, Any]) -> tuple[str, str, str]:
+        return await authenticate(user_input[CONF_EMAIL], user_input[CONF_PASSWORD])
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
@@ -37,9 +49,7 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                token, refresh_token, user_id = await authenticate(
-                    user_input[CONF_EMAIL], user_input[CONF_PASSWORD]
-                )
+                token, refresh_token, user_id = await self._authenticate_input(user_input)
 
                 return self.async_create_entry(
                     title=DEFAULT_NAME,
@@ -56,13 +66,7 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.error("Invalid credentials: %s", e)
                 errors["base"] = "invalid_credentials"
 
-        data_schema = vol.Schema(
-            {
-                vol.Required(CONF_EMAIL): str,
-                vol.Required(CONF_PASSWORD): str,
-                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
-            }
-        )
+        data_schema = self._build_schema(DEFAULT_SCAN_INTERVAL)
 
         return self.async_show_form(
             step_id="user", data_schema=data_schema, errors=errors
@@ -70,7 +74,7 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]
-    ) -> config_entries.ConfigFlowResult:
+    ) -> FlowResult:
         """Handle re-authentication step."""
         return await self.async_step_reauth_confirm()
 
@@ -116,3 +120,37 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=data_schema,
             errors=errors,
         )
+
+    async def async_step_reconfigure(
+        self, user_input: Optional[dict[str, Any]] = None
+    ) -> FlowResult:
+        errors = {}
+        reconfigure_entry = self._get_reconfigure_entry()
+
+        if reconfigure_entry is None:
+            return self.async_abort(reason='already_configured')
+
+        if user_input is not None:
+            try:
+                token, refresh_token, user_id = await self._authenticate_input(user_input)
+
+                self.hass.config_entries.async_update_entry(
+                    reconfigure_entry,
+                    data={
+                        CONF_TOKEN: token,
+                        CONF_REFRESH_TOKEN: refresh_token,
+                        CONF_USER_ID: user_id,
+                        CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
+                    },
+                )
+                await self.hass.config_entries.async_reload(reconfigure_entry.entry_id)
+                return self.async_abort(reason='reconfigure_successful')
+            except Exception as e:
+                _LOGGER.error(f'Invalid credentials while reconfiguring: {e}')
+                errors['base'] = 'invalid_credentials'
+
+        data_schema = self._build_schema(
+            reconfigure_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        )
+
+        return self.async_show_form(step_id='reconfigure', data_schema=data_schema, errors=errors)
