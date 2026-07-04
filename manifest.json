@@ -1,7 +1,7 @@
 {
   "domain": "davey_lifeguard",
   "name": "Davey Lifeguard",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "documentation": "https://github.com/ForWarZz/davey_lifeguard_ha",
   "dependencies": [],
   "codeowners": [
