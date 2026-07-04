@@ -92,6 +92,9 @@
       "flow_error": {
         "name": "Flow Error"
       },
+      "flow_state": {
+        "name": "Flow State"
+      },
       "is_connected": {
         "name": "Device Connected"
       }

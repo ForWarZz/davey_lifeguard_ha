@@ -7,7 +7,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, DAVEY_STATUS_SENSOR_KEY, PH_BIN_STATUS_KEY, ORP_BIN_STATUS_KEY, TEMP_BIN_STATUS_KEY, \
-    SALT_BIN_STATUS_KEY, VSD_BIN_STATUS_KEY, FLOW_ERROR_KEY, PH_ERROR_KEY, ORP_ERROR_KEY, SALT_ERROR_KEY
+    SALT_BIN_STATUS_KEY, VSD_BIN_STATUS_KEY, FLOW_BIN_STATUS_KEY, FLOW_ERROR_KEY, PH_ERROR_KEY, ORP_ERROR_KEY, SALT_ERROR_KEY
 from .utils import get_device_info
 
 
@@ -23,6 +23,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, asyn
         DaveyBinarySensor(coordinator, TEMP_BIN_STATUS_KEY, "temp_connected"),
         DaveyBinarySensor(coordinator, SALT_BIN_STATUS_KEY, "salinity_connected"),
         DaveyBinarySensor(coordinator, VSD_BIN_STATUS_KEY, "vsd_connected"),
+        DaveyBinarySensor(coordinator, FLOW_BIN_STATUS_KEY, "flow_state"),
 
         DaveyErrorBinarySensor(coordinator, FLOW_ERROR_KEY, "flow_error"),
         DaveyErrorBinarySensor(coordinator, PH_ERROR_KEY, "ph_error"),
@@ -41,7 +42,7 @@ class DaveyBinarySensor(BinarySensorEntity, CoordinatorEntity):
 
     @property
     def is_on(self) -> bool:
-        return self.coordinator.data.get(self.key, False)
+        return bool(self.coordinator.data.get(self.key, False))
 
     @property
     def unique_id(self):
