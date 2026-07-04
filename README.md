@@ -2,7 +2,7 @@
 
 # Home Assistant Integration: Davey Lifeguard
 
-![Davey Lifeguard Logo](ressources/logo.png)
+![Davey Lifeguard Logo](brand/logo.png)
 
 ## Project Summary
 
