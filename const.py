@@ -45,7 +45,7 @@ PH_BIN_STATUS_KEY = "phConnected"
 TEMP_BIN_STATUS_KEY = "tempConnected"
 SALT_BIN_STATUS_KEY = "salinityConnected"
 ORP_BIN_STATUS_KEY = "orpConnected"
-FLOW_STATE_BIN_STATUS_KEY = "flow"
+FLOW_BIN_STATUS_KEY = "flow"
 
 # Error status sensors
 FLOW_ERROR_KEY = "flowError"
