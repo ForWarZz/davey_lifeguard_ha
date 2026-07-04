@@ -92,6 +92,9 @@
       "flow_error": {
         "name": "Erreur débit"
       },
+      "flow_state": {
+        "name": "État filtration"
+      },
       "is_connected": {
         "name": "Appareil connecté"
       }
