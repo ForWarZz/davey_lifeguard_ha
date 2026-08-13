@@ -9,7 +9,6 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
-    CELL_OUTPUT_KEY,
     DOMAIN,
     ORP_SENSOR_KEY,
     PH_SENSOR_KEY,
@@ -64,7 +63,6 @@ class DaveyCoordinator(DataUpdateCoordinator):
                         ORP_SENSOR_KEY,
                         SALT_SENSOR_KEY,
                         TEMP_SENSOR_KEY,
-                        CELL_OUTPUT_KEY,
                     ):
                         if sensor_key in previous_data:
                             full_data[sensor_key] = previous_data[sensor_key]
