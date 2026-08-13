@@ -8,7 +8,14 @@ from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN
+from .const import (
+    CELL_OUTPUT_KEY,
+    DOMAIN,
+    ORP_SENSOR_KEY,
+    PH_SENSOR_KEY,
+    SALT_SENSOR_KEY,
+    TEMP_SENSOR_KEY,
+)
 from .davey.davey_exception import (
     DaveyAPIException,
     DaveyAuthException,
@@ -49,6 +56,18 @@ class DaveyCoordinator(DataUpdateCoordinator):
                 if full_data is None:
                     _LOGGER.warning("No data received from the device")
                     return None
+
+                previous_data = self.data or {}
+                if full_data.get("flow") is False:
+                    for sensor_key in (
+                        PH_SENSOR_KEY,
+                        ORP_SENSOR_KEY,
+                        SALT_SENSOR_KEY,
+                        TEMP_SENSOR_KEY,
+                        CELL_OUTPUT_KEY,
+                    ):
+                        if sensor_key in previous_data:
+                            full_data[sensor_key] = previous_data[sensor_key]
 
                 _LOGGER.debug("Device data fetched successfully")
                 _LOGGER.debug("Device data: %s", full_data)
