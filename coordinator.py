@@ -10,6 +10,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import (
     DOMAIN,
+    FLOW_BIN_STATUS_KEY,
     ORP_SENSOR_KEY,
     PH_SENSOR_KEY,
     SALT_SENSOR_KEY,
@@ -57,7 +58,7 @@ class DaveyCoordinator(DataUpdateCoordinator):
                     return None
 
                 previous_data = self.data or {}
-                if full_data.get("flow") is False:
+                if self._is_flow_disabled(full_data.get(FLOW_BIN_STATUS_KEY)):
                     for sensor_key in (
                         PH_SENSOR_KEY,
                         ORP_SENSOR_KEY,
@@ -82,6 +83,25 @@ class DaveyCoordinator(DataUpdateCoordinator):
 
         except DaveyAPIException as api_err:
             raise UpdateFailed(f"Unhandled API error: {api_err}") from api_err
+
+    @staticmethod
+    def _is_flow_disabled(flow_value: object) -> bool:
+        """Return True when flow/pump state indicates a stopped circulation."""
+        if isinstance(flow_value, bool):
+            return not flow_value
+        if isinstance(flow_value, (int, float)):
+            return flow_value == 0
+        if isinstance(flow_value, str):
+            normalized = flow_value.strip().lower()
+            return normalized in {
+                "0",
+                "false",
+                "off",
+                "no_flow",
+                "no flow",
+                "stopped",
+            }
+        return False
 
     async def __handle_token_error(self):
         self.update_interval = None
