@@ -57,7 +57,7 @@ class DaveyCoordinator(DataUpdateCoordinator):
                     return None
 
                 previous_data = self.data or {}
-                if full_data.get("flow") is False:
+                if full_data.get("flow") == 0:
                     for sensor_key in (
                         PH_SENSOR_KEY,
                         ORP_SENSOR_KEY,
