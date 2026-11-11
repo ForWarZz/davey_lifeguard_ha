@@ -1,6 +1,7 @@
 """Integration for Davey Lifeguard API."""
 
 import asyncio
+from collections.abc import Callable
 import logging
 from typing import Any
 
@@ -32,11 +33,19 @@ _LOGGER = logging.getLogger(__name__)
 class DaveyAPI:
     """API client for interacting with the Davey Lifeguard system."""
 
-    def __init__(self, token: str, refresh_token: str, user_id: str) -> None:
+    def __init__(
+        self,
+        token: str,
+        refresh_token: str,
+        user_id: str,
+        on_tokens_refreshed: Callable[[str, str], None] | None = None,
+    ) -> None:
         """Initialize the API client."""
         self.token: str = token
         self.refresh_token: str = refresh_token
         self.user_id: str = user_id
+        self._on_tokens_refreshed = on_tokens_refreshed
+        self._refresh_lock = asyncio.Lock()
         self.device_sn: str | None = None
         self._account_data: dict[str, Any] | None = None
         self._status_data: dict[str, Any] | None = None
@@ -60,24 +69,41 @@ class DaveyAPI:
         self.refresh_token = data["refreshToken"]
         _LOGGER.debug("Token refreshed successfully")
 
+        if self._on_tokens_refreshed is not None:
+            self._on_tokens_refreshed(self.token, self.refresh_token)
+
     async def __authenticated_call(
-        self, method: str, url: str, body: dict[str, Any] | None = None
+        self,
+        method: str,
+        url: str,
+        body: dict[str, Any] | None = None,
+        retry_on_auth_error: bool = True,
     ) -> dict[str, Any] | None:
         """Make an authenticated API call."""
         _LOGGER.debug("Calling %s [%s]", url, method)
 
         try:
             async with ClientSession() as session:
-                headers = {"Authorization": self.token}
+                used_token = self.token
+                headers = {"Authorization": used_token}
 
                 async with session.request(
                     method, url, headers=headers, json=body
                 ) as response:
                     if response.status == 401:
+                        if not retry_on_auth_error:
+                            raise DaveyAuthException("Unauthorized after token refresh")
+
                         _LOGGER.warning("Token expired or invalid, refreshing")
 
-                        await self.__refresh_token()
-                        return await self.__authenticated_call(method, url, body)
+                        # Parallel calls may all get a 401: refresh only once
+                        async with self._refresh_lock:
+                            if self.token == used_token:
+                                await self.__refresh_token()
+
+                        return await self.__authenticated_call(
+                            method, url, body, retry_on_auth_error=False
+                        )
 
                     response.raise_for_status()
                     return await response.json()

@@ -22,6 +22,9 @@ CONF_TOKEN = "lifeguard_account_token"
 CONF_REFRESH_TOKEN = "lifeguard_refresh_token"
 CONF_USER_ID = "lifeguard_user_id"
 
+# Device secrets returned by the API, never written to the logs
+SENSITIVE_KEYS = {"token", "certArn", "certData"}
+
 DAVEY_STATUS_SENSOR_KEY = "isConnected"
 
 # Sensors
