@@ -6,6 +6,7 @@ import logging
 
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.redact import async_redact_data
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
@@ -13,6 +14,7 @@ from .const import (
     ORP_SENSOR_KEY,
     PH_SENSOR_KEY,
     SALT_SENSOR_KEY,
+    SENSITIVE_KEYS,
     TEMP_SENSOR_KEY,
 )
 from .davey.davey_exception import (
@@ -68,7 +70,9 @@ class DaveyCoordinator(DataUpdateCoordinator):
                             full_data[sensor_key] = previous_data[sensor_key]
 
                 _LOGGER.debug("Device data fetched successfully")
-                _LOGGER.debug("Device data: %s", full_data)
+                _LOGGER.debug(
+                    "Device data: %s", async_redact_data(full_data, SENSITIVE_KEYS)
+                )
 
                 return full_data
         except DaveyAuthException as auth_err:

@@ -137,6 +137,8 @@ class DaveyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self.hass.config_entries.async_update_entry(
                     reconfigure_entry,
                     data={
+                        **reconfigure_entry.data,
+                        CONF_EMAIL: user_input[CONF_EMAIL],
                         CONF_TOKEN: token,
                         CONF_REFRESH_TOKEN: refresh_token,
                         CONF_USER_ID: user_id,

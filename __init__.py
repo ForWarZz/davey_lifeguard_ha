@@ -24,8 +24,18 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         refresh_token = config_entry.data[CONF_REFRESH_TOKEN]
         user_id = config_entry.data[CONF_USER_ID]
 
+        def save_tokens(new_token: str, new_refresh_token: str) -> None:
+            hass.config_entries.async_update_entry(
+                config_entry,
+                data={
+                    **config_entry.data,
+                    CONF_TOKEN: new_token,
+                    CONF_REFRESH_TOKEN: new_refresh_token,
+                },
+            )
+
         try:
-            davey_api = DaveyAPI(token, refresh_token, user_id)
+            davey_api = DaveyAPI(token, refresh_token, user_id, save_tokens)
             await davey_api.fetch_account_data()
         except DaveyAuthException as e:
             _LOGGER.error("Authentication failed: %s", e)
